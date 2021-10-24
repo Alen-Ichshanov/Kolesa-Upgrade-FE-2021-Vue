@@ -64,19 +64,19 @@
             <div class="shop-container main-container__shop-container">
                 <div class="tabs-container shop-container__tabs-container">
                     <label for="tab1" class="label-container tabs-container__label-container"
-                    @click="switchToCategory1">
+                    @click="switchCategory(1)">
                         <input class="label-container__input" type="radio"
                         id="tab1" name="tab" value="all" checked>
                         <span class="label-container__back">Все товары</span>
                     </label>
                     <label for="tab2" class="label-container tabs-container__label-container"
-                    @click="switchToCategory2">
+                    @click="switchCategory(2)">
                         <input class="label-container__input" type="radio"
                         id="tab2" name="tab" value="clothes">
                         <span class="label-container__back">Одежда</span>
                     </label>
                     <label for="tab3" class="label-container tabs-container__label-container"
-                    @click="switchToCategory3">
+                    @click="switchCategory(3)">
                         <input class="label-container__input" type="radio"
                         id="tab3" name="tab" value="accessories">
                         <span class="label-container__back">Аксессуары</span>
@@ -389,28 +389,18 @@ export default {
       return this.clothes.concat(this.accessories).sort(this.compareValues('isNew', 'desc'));
     },
     products() {
-      let products;
       if (this.category === 1) {
-        products = this.clothes.concat(this.accessories).sort(this.compareValues('isNew', 'desc'));
+        return this.productsAll;
       } if (this.category === 2) {
-        products = this.clothes.slice(0).sort(this.compareValues('isNew', 'desc'));
+        return this.clothesSorted;
       } if (this.category === 3) {
-        products = this.accessories.slice(0).sort(this.compareValues('isNew', 'desc'));
-      } return products;
+        return this.accessoriesSorted;
+      } return this.productsAll;
     },
   },
   methods: {
-    switchToCategory1() {
-      this.category = 1;
-      console.log(1);
-    },
-    switchToCategory2() {
-      this.category = 2;
-      console.log(2);
-    },
-    switchToCategory3() {
-      this.category = 3;
-      console.log(3);
+    switchCategory(catId) {
+      this.category = catId;
     },
     openModal() {
       this.isShowModal = true;
