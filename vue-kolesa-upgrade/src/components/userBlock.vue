@@ -1,9 +1,9 @@
 <template>
-  <a class="user header__user" href="#" @click="userChange">
-            <img src="../assets/images/user.png" alt="Аватар пользователя" class="user__user-photo">
+  <a class="user header__user" href="#">
+            <img :src="userData.avatarUrl" alt="Аватар пользователя" class="user__user-photo">
             <span class="user-info user__user-info">
-                <span class="txt user-info__user-name">{{ userName }}</span>
-                <span class="txt user-info__user-points">{{ userScore }} баллов</span>
+                <span class="txt user-info__user-name">{{ userData.name }}</span>
+                <span class="txt user-info__user-points">{{ userData.score }} баллов</span>
             </span>
         </a>
 </template>
@@ -14,29 +14,15 @@ import axios from '@/axios';
 export default {
   name: 'userBlock',
   props: {
-    userNameUpdate: String,
-    userScoreUpdate: Number,
-  },
-  data() {
-    return {
-      userName: '',
-      userScore: 0,
-      userData: {},
-    };
+    userData: {
+      type: Object,
+    },
   },
   mounted() {
-    axios.get('https://api.json-generator.com/templates/7ZW3y5GAuIge/data')
+    axios.get('7ZW3y5GAuIge/data')
       .then((response) => {
-        console.log(response.data);
-        this.userName = response.data.name;
-        this.userScore = response.data.score;
-        this.userData = response.data;
+        this.$emit('userChange', response.data);
       });
-  },
-  methods: {
-    userChange() {
-      this.$emit('userChange', this.userData);
-    },
   },
 };
 </script>

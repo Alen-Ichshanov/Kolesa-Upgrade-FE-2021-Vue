@@ -1,5 +1,5 @@
 <template>
-                <div class="product-container js__product-container">
+                <div class="product-container">
                     <div v-for="product in dataProduct" :key="product.id" class="product-card-wrap
                   product-container__product-card-wrap"  @click="openCard(product)">
                      <div class="product-card product-card-wrap__product-card hover-card"
@@ -23,7 +23,10 @@
 export default {
   name: 'productCard',
   props: {
-    dataProduct: Array,
+    dataProduct: {
+      type: Array,
+      required: true,
+    },
   },
   methods: {
     findImagePath(item) {

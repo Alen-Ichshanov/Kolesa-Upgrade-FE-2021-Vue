@@ -3,7 +3,7 @@
       <header class="header page__header">
         <img src="./assets/images/kolesa-vector.svg" alt="Логотип Kolesa Group" class="header__img">
         <search-bar></search-bar>
-        <user-block @userChange="setUser"></user-block>
+        <user-block @userChange="setUser" :userData="user"></user-block>
       </header>
       <main class="main page__main">
         <nav-menu></nav-menu>
@@ -14,14 +14,12 @@
             <points-buttons></points-buttons>
             <tabs-filter @switchCategory="switchCategory"></tabs-filter>
             <div class="shop-container main-container__shop-container">
-                <product-card :dataProduct="products" @sendModalData="openCard">
-                </product-card>
+                <product-cards :dataProduct="products" @sendModalData="openCard">
+                </product-cards>
             </div>
         </div>
-        <div class="js__modal-container">
-          <modal :data="modalData" :isOpen="isShowModal" @close="closeModal"
-          @order="setScore"></modal>
-        </div>
+        <modal :data="modalData" :isOpen="isShowModal" @close="closeModal"
+        @order="setScore"></modal>
       </main>
       <footer-comp></footer-comp>
     </div>
@@ -32,158 +30,52 @@ import axios from '@/axios';
 
 import Modal from './components/Modal.vue';
 import NavMenu from './components/NavMenu.vue';
-import pointsButtons from './components/pointsButtons.vue';
-import tabsFilter from './components/tabsFilter.vue';
-import footerComp from './components/footer.vue';
-import searchBar from './components/searchBar.vue';
-import userBlock from './components/userBlock.vue';
-import productCard from './components/productCard.vue';
+import PointsButtons from './components/PointsButtons.vue';
+import TabsFilter from './components/TabsFilter.vue';
+import FooterComp from './components/Footer.vue';
+import SearchBar from './components/SearchBar.vue';
+import UserBlock from './components/UserBlock.vue';
+import ProductCards from './components/ProductCards.vue';
 
 export default {
   name: 'App',
   components: {
     Modal,
     NavMenu,
-    pointsButtons,
-    tabsFilter,
-    footerComp,
-    searchBar,
-    userBlock,
-    productCard,
+    PointsButtons,
+    TabsFilter,
+    FooterComp,
+    SearchBar,
+    UserBlock,
+    ProductCards,
   },
   data() {
     return {
       isShowModal: false,
       modalData: {},
-      clothes: [
-        {
-          id: 1,
-          image: 'tshirt-img',
-          isNew: true,
-          title: 'Футболка "Эволюционируй или сдохни"',
-          price: 220,
-          size: 'Размеры S/M/L',
-          hasSize: true,
-          hasColor: true,
-          details: 'Брендированная футболка от Qazaq Republic. Материал: Хлопок 80%, Вискоза 20%',
-        },
-        {
-          id: 2,
-          image: 'tshirt-img',
-          isNew: false,
-          title: 'Футболка "Эволюционируй или сдохни" Limited',
-          price: 220,
-          size: 'Оверсайз',
-          hasColor: true,
-          details: 'Брендированная футболка от Qazaq Republic. Материал: Хлопок 80%, Вискоза 20%. Переиздание',
-        },
-        {
-          id: 3,
-          image: 'sweatshirt-img',
-          isNew: false,
-          title: 'Толстовка "Kolesa Team post-COVID"',
-          price: 290,
-          size: 'Размеры S/M/L',
-          hasColor: true,
-          details: 'Брендированная толстовка от Qazaq Republic. Материал: Хлопок 80%, Вискоза 20%.',
-        },
-        {
-          id: 4,
-          image: 'sweatshirt-img',
-          isNew: false,
-          title: 'Толстовка "Kolesa Team pre-COVID"',
-          price: 280,
-          size: 'Размеры S/M/L',
-          hasColor: true,
-          details: 'Брендированная толстовка от Qazaq Republic. Материал: Хлопок 80%, Вискоза 20%.',
-        },
-        {
-          id: 5,
-          image: 'hoodie-img',
-          isNew: false,
-          title: 'Худи "Kolesa Minimal"',
-          price: 300,
-          size: 'Размеры S/M/L',
-          hasColor: true,
-          details: 'Минималистичная худи от Qazaq Republic. Материал: Хлопок 80%, Вискоза 20%. Минимализм во всей красе',
-        },
-        {
-          id: 6,
-          image: 'hoodie-img',
-          isNew: true,
-          title: 'Худи "Kolesa Minimal vol.2"',
-          price: 320,
-          size: 'Размеры S/M/L',
-          hasColor: true,
-          details: 'Минималистичная худи от Qazaq Republic. Материал: Хлопок 80%, Вискоза 20%. Переиздание.',
-        },
-      ],
-
-      accessories: [
-        {
-          id: 7,
-          image: 'bottle-img',
-          isNew: false,
-          title: 'Бутылка прозрачная "Kolesa Water"',
-          price: 150,
-          size: 'Объем 0.5/0.7/1 л.',
-          hasColor: false,
-          details: 'Брендированная бутылка от Qazaq Republic из прозрачного пластика.',
-        },
-        {
-          id: 8,
-          image: 'bottle-img',
-          isNew: true,
-          title: 'Бутылка матовая "Kolesa Water"',
-          price: 160,
-          size: 'Объем 0.5/0.7/1 л.',
-          hasColor: false,
-          details: 'Брендированная бутылка от Qazaq Republic из матового пластика.',
-        },
-        {
-          id: 9,
-          image: 'cap-img',
-          isNew: true,
-          title: 'Бейсболка "Kolesa Simple vol.2"',
-          price: 200,
-          size: 'Размеры S/M/L',
-          hasColor: true,
-          details: 'Брендированная бейсболка от Qazaq Republic. Материал: Хлопок 80%, Вискоза 20%. Переиздание.',
-        },
-        {
-          id: 10,
-          image: 'cap-img',
-          isNew: false,
-          title: 'Бейсболка "Kolesa Simple"',
-          price: 200,
-          size: 'Размеры S/M/L',
-          hasColor: true,
-          details: 'Брендированная бейсболка от Qazaq Republic. Материал: Хлопок 80%, Вискоза 20%.',
-        },
-        {
-          id: 11,
-          image: 'notebook-img',
-          isNew: false,
-          title: 'Блокнот "Kolesa Thoughts Out"',
-          price: 220,
-          size: 'Объем 100 стр.',
-          hasColor: false,
-          details: 'Брендированный блокнот от Qazaq Republic на 100 страниц.',
-        },
-        {
-          id: 12,
-          image: 'notebook-img',
-          isNew: false,
-          title: 'Блокнот "Kolesa Thoughts Out"',
-          price: 180,
-          size: 'Объем 50 стр.',
-          hasColor: false,
-          details: 'Брендированный блокнот от Qazaq Republic на 50 страниц.',
-        },
-      ],
       category: 1,
+      clothes: [],
+      accessories: [],
       user: {},
     };
+  },
+  mounted() {
+    axios.get('-_RLsEGjof6i/data')
+      .then((response) => {
+        this.clothes = response.data;
+      })
+      .catch((response) => {
+        // eslint-disable-next-line
+        alert(response);
+      });
+    axios.get('q3OPxRyEcPvP/data')
+      .then((response) => {
+        this.accessories = response.data;
+      })
+      .catch((response) => {
+        // eslint-disable-next-line
+        alert(response);
+      });
   },
   computed: {
     clothesSorted() {
@@ -205,24 +97,14 @@ export default {
       } return this.productsAll;
     },
   },
-  mounted() {
-    axios.get('https://api.json-generator.com/templates/-_RLsEGjof6i/data')
-      .then((response) => {
-        this.clothes = response.data;
-      });
-    axios.get('https://api.json-generator.com/templates/q3OPxRyEcPvP/data')
-      .then((response) => {
-        this.accessories = response.data;
-      });
-  },
   methods: {
     switchCategory(catId) {
       this.category = catId;
     },
     openCard(data) {
-      console.log(data);
-      this.openModal();
       this.modalData = data;
+      this.openModal();
+      console.log(this.modalData);
     },
     openModal() {
       this.isShowModal = true;
@@ -250,7 +132,7 @@ export default {
     },
     setScore(price) {
       console.log(price);
-      if (this.user.score > price || this.user.score === price) {
+      if (this.user.score >= price) {
         this.user.score -= price;
       } else {
         // eslint-disable-next-line no-alert
@@ -258,9 +140,7 @@ export default {
       }
     },
     setUser(userData) {
-      this.user.name = userData.name;
-      this.user.score = userData.score;
-      console.log('user updated');
+      this.user = userData;
     },
   },
 };
