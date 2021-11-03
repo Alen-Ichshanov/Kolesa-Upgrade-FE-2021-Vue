@@ -1,0 +1,11 @@
+.score-cards {
+    &__earn-score {
+        width: 330px;
+        height: 324px;
+        margin-bottom: 24px;
+
+        &:not(:nth-child(3n)) {
+            margin-right: 24px;
+          }
+    }
+}
