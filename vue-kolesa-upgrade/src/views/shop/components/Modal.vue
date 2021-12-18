@@ -9,11 +9,11 @@
             <img :src="data.mainImage" alt="Фото товара" width="330" height="330">
           </div>
           <div class="modal__preview-container">
-            <img src="../assets/images/preview-1.png" class="modal__preview-img" alt="Фото товара">
-            <img src="../assets/images/preview-2.png"
+            <img src="@/assets/images/preview-1.png" class="modal__preview-img" alt="Фото товара">
+            <img src="@/assets/images/preview-2.png"
             class="modal__preview-img modal__preview-img-active"
             alt="Фото товара">
-            <img src="../assets/images/preview-3.png" class="modal__preview-img"
+            <img src="@/assets/images/preview-3.png" class="modal__preview-img"
             alt="Фото товара">
           </div>
         </div>
@@ -28,7 +28,7 @@
             <div class="modal__balance">
               <div class="modal__balance-info">
                 <span class="modal__your-txt">Твой баланс:</span><br>
-                <span class="modal__balance-num">3945 баллов</span>
+                <span class="modal__balance-num">{{ $store.state.userData.score }} баллов</span>
               </div>
               <div class="balance-icon">
                 <img src="@/assets/images/balance-icon.png" alt="">
@@ -98,7 +98,13 @@ export default {
       this.$emit('close');
     },
     order() {
-      this.$emit('order', this.data.price);
+      const { score } = this.$store.state.userData;
+      if (score <= this.data.price) {
+        // eslint-disable-next-line
+        alert('У вас не хватает баллов для покупки!');
+        return;
+      }
+      this.$store.commit('setNewScore', this.data.price);
     },
   },
 };

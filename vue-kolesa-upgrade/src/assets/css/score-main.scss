@@ -1,0 +1,21 @@
+.score-main {
+  display: flex;
+  flex-direction: column;
+
+  &__score-cards {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 64px;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    margin-bottom: 16px;
+  }
+
+  &__links {
+    margin-bottom: 24px;
+  }
+}

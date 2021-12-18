@@ -31,7 +31,7 @@ export default {
   methods: {
     findImagePath(item) {
       // eslint-disable-next-line global-require,import/no-dynamic-require,import/extensions
-      return require(`../assets/images/${item}.png`);
+      return require(`@/assets/images/${item}.png`);
     },
     openCard(product) {
       this.$emit('sendModalData', product);
